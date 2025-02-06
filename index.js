@@ -120,7 +120,7 @@ async def iniciarBot():
                 "📌 *Como usar:*"
                 """
 ```
-"/ping <TYPE> <IP/HOST:PORT> <THREADS> <MS>\n"
+// /ping <TYPE> <IP/HOST:PORT> <THREADS> <MS>
                 "💡 *Exemplo:*"
                 """
 ```
