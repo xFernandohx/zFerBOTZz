@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
         pthread_join(thread_ids[i], NULL);
     }
 
-    std::cout << "Attack finished. Join @SOULCRACKS\n";
+    std::cout << "Attack finished. Creador @xFernandoh\n";
     return 0;
 }
 //g++ -std=c++14 soulcracks.cpp -o soul -pthread
